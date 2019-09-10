@@ -1,2 +1,2 @@
 from sling_commons import load_commons_store
-
+from third_party.bratreader.repomodel import RepoModel
