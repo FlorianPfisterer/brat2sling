@@ -2,6 +2,11 @@
 """Maps brat frame names to SLING frame types (schema)"""
 
 UNKNOWN_FRAME = 'UNKNOWN_FRAME'
+ACTION = 'Action'
+ENTITY = 'Entity'
+FRAME = 'PrimaryFrame'
+INPUT = 'Input'
+LOCATION = 'Location'
 
 BRAT_TO_SLING_FRAME = {
     'Divide': '/recipes/divide',
@@ -19,8 +24,8 @@ BRAT_TO_SLING_FRAME = {
 }
 
 BRAT_TO_SLING_RELATION = {
-    'Input': '/recipes/action/input',
-    'Location': '/recipes/action/location'
+    INPUT: '/recipes/action/input',
+    LOCATION: '/recipes/action/location'
 
     # TODO utensil, condition, ...
 }

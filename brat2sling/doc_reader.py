@@ -1,12 +1,10 @@
 from bratreader.annotateddocument import AnnotatedDocument
 from bratreader.word import Word
 from bratreader.annotation import Annotation
-from typing import Dict, List
-from brat2sling.brat_frames import UNKNOWN_FRAME
-
-ACTION = 'Action'
-ENTITY = 'Entity'
-FRAME = 'PrimaryFrame'
+from typing import Dict, List, Tuple
+from brat2sling.brat_frames import UNKNOWN_FRAME, FRAME, ACTION, ENTITY, INPUT, LOCATION
+from brat2sling.mention import Mention
+from brat2sling.slot import Slot
 
 
 def __read_links(annotation: Annotation):
@@ -18,6 +16,8 @@ def __read_links(annotation: Annotation):
 class DocReader:
     doc: AnnotatedDocument
     __tokens: Dict[Word, int]
+    __mentions: List[Mention]
+    __mentions_slots: Dict[int, List[Slot]]
 
     def __init__(self, document: AnnotatedDocument):
         self.doc = document
@@ -28,28 +28,39 @@ class DocReader:
 
         # go through all annotations
         for annotation in self.doc.annotations:
-            word_indices = list(map(lambda w: self.__tokens[w], annotation.words))
-            from_idx = word_indices[0]
-            to_idx = word_indices[-1] + 1
+            self.__read_links_and_labels(annotation)
 
-            self.__read_links(annotation.links, from_idx, to_idx)
-            self.__read_labels(annotation.labels, from_idx, to_idx)
+    def __read_links_and_labels(self, annotation: Annotation):
+        from_idx, to_idx = self.__get_word_indices(annotation)
+        labels: Dict[str, List[str]] = annotation.labels
+        links: Dict[str, List[Annotation]] = annotation.links
 
-    def __read_links(self, links, from_idx: int, to_idx: int):
-        for link in links:
-            print(link)
-            print(links[link])
-
-    def __read_labels(self, labels, from_idx: int, to_idx: int):
+        # first, determine the type of mention (if any)
+        mention: Mention
         if ACTION in labels:
             frame = UNKNOWN_FRAME
             if FRAME in labels:
                 frame = labels[FRAME][0]
-            # TODO create mention
+            mention = Mention(annotation.id, frame, from_idx, to_idx)
         elif ENTITY in labels:
-            # interpret as entity
-            # TODO create mention
-            pass
+            mention = Mention(annotation.id, ENTITY, from_idx, to_idx)
+        else:
+            return
+
+        self.__mentions.append(mention)
+
+        def add_slot(head_id: int, slot_mention: Mention, slot_name: str):
+            slot = Slot(slot_mention, slot_name)
+            if head_id in self.__mentions_slots:
+                self.__mentions_slots[head_id].append(slot)
+            else:
+                self.__mentions_slots[head_id] = [slot]
+
+        # second, check if this mention fills any slot of another mention
+        for relation_name in [INPUT, LOCATION]:
+            if relation_name in links:
+                head_annotation: Annotation = links[relation_name][0]
+                add_slot(head_annotation.id, mention, relation_name)
 
     def __read_tokens(self):
         self.__tokens = {}
@@ -59,9 +70,23 @@ class DocReader:
                 self.__tokens[word] = i
                 i = i + 1
 
+    def __get_word_indices(self, annotation: Annotation) -> Tuple[int, int]:
+        word_indices = list(map(lambda w: self.__tokens[w], annotation.words))
+        from_idx = word_indices[0]
+        to_idx = word_indices[-1] + 1
+        return from_idx, to_idx
+
     # Public
     def get_tokens(self) -> List[str]:
         tokens = [] * len(self.__tokens)
         for word in self.__tokens:
             tokens[self.__tokens[word]] = word.form
         return tokens
+
+    def get_all_mentions(self) -> List[Mention]:
+        return self.__mentions
+
+    def get_slots_for_mention(self, mention: Mention) -> List[Slot]:
+        if mention.id in self.__mentions_slots:
+            return self.__mentions_slots[mention.id]
+        return []
