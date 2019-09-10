@@ -1,0 +1,50 @@
+{=/recipes/action :schema +named
+    name: "Action" 
+
+    ; an action can have a location
+    role: {=/recipes/action/location :slot
+        name: "location",
+        source: /recipes/action
+        target: /recipes/location
+    }
+
+    ; an action can have multiple inputs
+    role: {=/recipes/action/input :slot
+        name: "input",
+        source: /recipes/action
+        target: /recipes/entity
+        multi: 1
+    }
+
+    ; an action can have multiple utensils
+    role: {=/recipes/action/utensil :slot
+        name: "utensil"
+        source: /recipes/action
+        target: /recipes/utensil
+        multi: 1
+    }
+}
+
+{=/recipes/entity :schema +named
+    name: "Entity" 
+    
+    role: {=/recipes/entity/text :slot
+        name: "text",
+        source: /recipes/entity
+        target: string
+    }
+
+    ; TODO perhaps add something like amount, unit, etc.
+}
+
+{=/recipes/utensil :schema +/recipes/entity
+    name: "utensil"
+}
+
+{=/recipes/merge :schema +/recipes/action
+    name: "Merge"
+}
+
+{=/recipes/divide :schema +/recipes/action
+    name: "Divide"
+}

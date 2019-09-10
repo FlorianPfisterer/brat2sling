@@ -1,0 +1,173 @@
+; SLING document schema definitions.
+
+; Document schema.
+{=document +named :schema
+  name: "Document"
+  family: document
+
+  role: {=url :slot
+    name: "url"
+    description: "Document URL"
+    source: document
+    target: string
+  }
+
+  role: {=title :slot
+    name: "title"
+    description: "Document title"
+    source: document
+    target: string
+  }
+
+  role: {=text :slot
+    name: "text"
+    description: "Document text"
+    source: document
+    target: string
+  }
+
+  role: {=tokens :slot
+    name: "tokens"
+    description: "Document tokens"
+    source: document
+    target: token
+  }
+
+  role: {=mention :slot
+    name: "mention"
+    description: "Mention phrase"
+    source: document
+    target: phrase
+    multi: 1
+  }
+
+  role: {=theme :slot
+    name: "theme"
+    description: "Thematic frame"
+    source: document
+    multi: 1
+  }
+}
+
+; Token schema.
+{=token :schema
+  name: "Phrase"
+  family: /schema/document
+
+  role: {=index :slot
+    name: "index"
+    description: "Index of token in document"
+    source: token
+    target: int
+  }
+
+  role: {=start :slot
+    name: "start"
+    description: "First byte for token in document text"
+    source: token
+    target: int
+  }
+
+  role: {=size :slot
+    name: "size"
+    description: "Length of token in document text in bytes"
+    source: token
+    target: int
+  }
+
+  role: {=break :slot
+    name: "break"
+    description: "Break type before token"
+    source: token
+    target: int
+  }
+
+  role: {=word :slot
+    name: "word"
+    description: "Token word"
+    source: token
+    target: string
+  }
+}
+
+; Phrase schema.
+{=phrase :schema
+  name: "Phrase"
+  family: /schema/document
+
+  role: {=begin :slot
+    name: "begin"
+    description: "First token in document for phrase"
+    source: phrase
+    target: int
+  }
+
+  role: {=length :slot
+    name: "length"
+    description: "Number of tokens in phrase"
+    source: phrase
+    target: int
+  }
+
+  role: {=evokes :slot
+    name: "evokes"
+    description: "Frame evoked by phrase"
+    source: phrase
+    multi: 1
+  }
+}
+
+; Profile schema.
+{=profile +knowledge :schema
+  name: "Profile"
+  family: /schema/document
+
+  role: {=alias :slot
+    name: "alias"
+    description: "Entity name"
+    source: profile
+    target: alias
+    multi: 1
+  }
+}
+
+; TODO: 'alias' conflicts with profile.alias
+{=alias +named :schema
+  name: "Alias"
+  family: /schema/document
+
+  role: {=sources :slot
+    name: "Alias sources"
+    description: "Bitmask for sources of alias"
+    source: profile
+    target: int
+  }
+
+  role: {=count :slot
+    name: "Alias count"
+    description: "Number of alias occurences"
+    source: profile
+    target: int
+  }
+
+  role: {=form :slot
+    name: "Case form"
+    description: "Most common case variant for alias"
+    source: profile
+    target: int
+  }
+}
+
+; Document schema family
+{=/schema/document :schema_family
+  name: "Document schemas"
+  precompute_ancestors: 1
+
+  member_schema: document
+  member_schema: token
+  member_schema: phrase
+
+  member_schema: profile
+  member_schema: alias
+}
+
