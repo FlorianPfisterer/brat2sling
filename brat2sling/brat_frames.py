@@ -1,9 +1,12 @@
 
 """Maps brat frame names to SLING frame types (schema)"""
 
+UNKNOWN_FRAME = 'UNKNOWN_FRAME'
+
 BRAT_TO_SLING_FRAME = {
     'Divide': '/recipes/divide',
-    'Merge': '/recipes/merge'
+    'Merge': '/recipes/merge',
+    UNKNOWN_FRAME: '/recipes/action'    # generic action
 
     # TODO
     """'LocationChange': '/recipes/divide',

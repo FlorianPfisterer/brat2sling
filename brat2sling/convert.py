@@ -1,6 +1,7 @@
 from bratreader.repomodel import RepoModel
 from brat2sling.sling_commons import load_commons_store
 from brat2sling.doc_converter import DocConverter
+from brat2sling.doc_reader import DocReader
 import argparse
 import sling
 
@@ -15,8 +16,9 @@ def convert(brat_dir_path: str, output_dir_path: str, verbose: bool = False):
     schema = sling.DocumentSchema(commons)
     commons.freeze()
 
-    for document in repo.documents:
-        reader = DocReader
+    for document_name in repo.documents:
+        document = repo.documents[document_name]
+        reader = DocReader(document)
         converter = DocConverter(commons, schema)
         # TODO
 
