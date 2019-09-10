@@ -7,12 +7,6 @@ from brat2sling.mention import Mention
 from brat2sling.slot import Slot
 
 
-def __read_links(annotation: Annotation):
-    for link in annotation.links:
-        print('link', link)
-        print(annotation.links[link])
-
-
 class DocReader:
     doc: AnnotatedDocument
     __tokens: Dict[Word, int]
