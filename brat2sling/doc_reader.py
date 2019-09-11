@@ -15,6 +15,9 @@ class DocReader:
 
     def __init__(self, document: AnnotatedDocument):
         self.doc = document
+        self.__tokens = {}
+        self.__mentions = []
+        self.__mentions_slots = {}
         self.__read_document()
 
     def __read_document(self):
@@ -44,7 +47,7 @@ class DocReader:
         self.__mentions.append(mention)
 
         def add_slot(head_id: int, slot_mention: Mention, slot_name: str):
-            slot = Slot(slot_mention, slot_name)
+            slot = Slot(head_id, slot_mention, slot_name)
             if head_id in self.__mentions_slots:
                 self.__mentions_slots[head_id].append(slot)
             else:
@@ -72,7 +75,7 @@ class DocReader:
 
     # Public
     def get_tokens(self) -> List[str]:
-        tokens = [] * len(self.__tokens)
+        tokens = [[]] * len(self.__tokens)
         for word in self.__tokens:
             tokens[self.__tokens[word]] = word.form
         return tokens
@@ -80,7 +83,14 @@ class DocReader:
     def get_all_mentions(self) -> List[Mention]:
         return self.__mentions
 
-    def get_slots_for_mention(self, mention: Mention) -> List[Slot]:
+    def get_slots_for_mention_by_name(self, mention: Mention) -> Dict[str, List[Slot]]:
         if mention.id in self.__mentions_slots:
-            return self.__mentions_slots[mention.id]
-        return []
+            slots_by_name = {}
+            slots = self.__mentions_slots[mention.id]
+            for slot in slots:
+                if slot.slot_name in slots_by_name:
+                    slots_by_name[slot.slot_name].append(slot)
+                else:
+                    slots_by_name[slot.slot_name] = [slot]
+            return slots_by_name
+        return {}

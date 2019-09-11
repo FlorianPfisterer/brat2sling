@@ -26,13 +26,7 @@
 }
 
 {=/recipes/entity :schema +named
-    name: "Entity" 
-    
-    role: {=/recipes/entity/text :slot
-        name: "text",
-        source: /recipes/entity
-        target: string
-    }
+    name: "Entity"
 
     ; TODO perhaps add something like amount, unit, etc.
 }
