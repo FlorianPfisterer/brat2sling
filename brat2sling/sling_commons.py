@@ -9,5 +9,11 @@ def load_commons_store():
     return commons
 
 
+def export_commons_store():
+    store = load_commons_store()
+    store.freeze()
+    store.save('./commons.sling', binary=True)
+
+
 if __name__ == '__main__':
-    print(load_commons_store())
+    export_commons_store()
