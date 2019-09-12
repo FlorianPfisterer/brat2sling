@@ -23,6 +23,14 @@
         target: /recipes/utensil
         multi: 1
     }
+
+    ; an action can have multiple conditions
+    role: {=/recipes/action/condition :slot
+        name: "utensil"
+        source: /recipes/action
+        target: /recipes/condition
+        multi: 1
+    }
 }
 
 {=/recipes/entity :schema +named
@@ -32,13 +40,48 @@
 }
 
 {=/recipes/utensil :schema +/recipes/entity
-    name: "utensil"
+    name: "Utensil"
 }
 
+{=/recipes/condition :schema +/recipes/entity
+    name: "Condition"
+
+    ; TODO perhaps add more attributes like type (temporal, temperature, ...), subtypes?
+}
+
+; Frames
 {=/recipes/merge :schema +/recipes/action
     name: "Merge"
 }
 
 {=/recipes/divide :schema +/recipes/action
     name: "Divide"
+}
+
+{=/recipes/location-change :schema +/recipes/action
+    name: "LocationChange"
+}
+
+{=/recipes/orientation-change :schema +/recipes/action
+    name: "OrientationChange"
+}
+
+{=/recipes/matter-state-change :schema +/recipes/action
+    name: "MatterStateChange"
+}
+
+{=/recipes/shape-change :schema +/recipes/action
+    name: "ShapeChange"
+}
+
+{=/recipes/temperature-change :schema +/recipes/action
+    name: "TemperatureChange"
+}
+
+{=/recipes/generate :schema +/recipes/action
+    name: "Generate"
+}
+
+{=/recipes/size-change :schema +/recipes/action
+    name: "SizeChange"
 }

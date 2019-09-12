@@ -2,7 +2,7 @@ from bratreader.annotateddocument import AnnotatedDocument
 from bratreader.word import Word
 from bratreader.annotation import Annotation
 from typing import Dict, List, Tuple
-from brat2sling.brat_frames import UNKNOWN_FRAME, FRAME, ACTION, ENTITY, INPUT, LOCATION
+from brat2sling.brat_frames import UNKNOWN_FRAME, FRAME, ACTION, ENTITY, INPUT, LOCATION, UTENSIL, CONDITION
 from brat2sling.mention import Mention
 from brat2sling.slot import Slot
 
@@ -54,7 +54,7 @@ class DocReader:
                 self.__mentions_slots[head_id] = [slot]
 
         # second, check if this mention fills any slot of another mention
-        for relation_name in [INPUT, LOCATION]:
+        for relation_name in [INPUT, LOCATION, UTENSIL, CONDITION]:
             if relation_name in links:
                 head_annotation: Annotation = links[relation_name][0]
                 add_slot(head_annotation.id, mention, relation_name)

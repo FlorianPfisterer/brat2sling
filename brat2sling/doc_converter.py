@@ -39,7 +39,7 @@ class DocConverter:
             return slot_to_frame(slots[0])
         else:
             array = self.store.array(len(slots))
-            for i, slot in slots:
+            for i, slot in enumerate(slots):
                 array[i] = slot_to_frame(slot)
             return array
 
