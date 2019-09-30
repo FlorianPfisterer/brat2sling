@@ -111,6 +111,8 @@ ENV/
 env.bak/
 venv.bak/
 
+brat_semantic_gold
+
 # Spyder project settings
 .spyderproject
 .spyproject
