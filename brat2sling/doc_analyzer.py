@@ -6,7 +6,7 @@ from brat2sling.slot import Slot
 
 
 class DocAnalyzer:
-    def analze(self, reader: DocReader):
+    def analyze(self, reader: DocReader):
         # 1. add all tokens
         tokens = reader.get_tokens()
 

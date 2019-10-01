@@ -1,5 +1,4 @@
 from bratreader.repomodel import RepoModel
-from brat2sling.doc_converter import DocConverter
 from brat2sling.doc_reader import DocReader
 from brat2sling.doc_analyzer import DocAnalyzer
 import argparse
