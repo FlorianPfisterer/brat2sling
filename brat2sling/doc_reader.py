@@ -31,6 +31,7 @@ class DocReader:
         from_idx, to_idx = self.__get_word_indices(annotation)
         labels: Dict[str, List[str]] = annotation.labels
         links: Dict[str, List[Annotation]] = annotation.links
+        sentence_id = annotation.words[0].sentkey
 
         # first, determine the type of mention (if any)
         mention: Mention
@@ -38,9 +39,9 @@ class DocReader:
             frame = UNKNOWN_FRAME
             if FRAME in labels:
                 frame = labels[FRAME][0]
-            mention = Mention(annotation.id, frame, from_idx, to_idx)
+            mention = Mention(annotation.id, frame, from_idx, to_idx, sentence_id)
         elif ENTITY in labels:
-            mention = Mention(annotation.id, ENTITY, from_idx, to_idx)
+            mention = Mention(annotation.id, ENTITY, from_idx, to_idx, sentence_id)
         else:
             return
 
